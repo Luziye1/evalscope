@@ -101,65 +101,77 @@ class ResponseParser:
         options_concat = ResponseParser.process_options(options)
 
         patterns = [
-            rf'答案是?\s?([{options_concat}])',
-            rf'答案是?\s?：([{options_concat}])',
-            rf'答案是?\s?:([{options_concat}])',
-            rf'答案应该?是\s?([{options_concat}])',
-            rf'答案应该?选\s?([{options_concat}])',
-            rf'答案为\s?([{options_concat}])',
-            rf'答案选\s?([{options_concat}])',
-            rf'选择?\s?([{options_concat}])',
-            rf'故选?\s?([{options_concat}])'
-            rf'只有选?项?\s?([{options_concat}])\s?是?对',
-            rf'只有选?项?\s?([{options_concat}])\s?是?错',
-            rf'只有选?项?\s?([{options_concat}])\s?不?正确',
-            rf'只有选?项?\s?([{options_concat}])\s?错误',
-            rf'说法不?对选?项?的?是\s?([{options_concat}])',
-            rf'说法不?正确选?项?的?是\s?([{options_concat}])',
-            rf'说法错误选?项?的?是\s?([{options_concat}])',
-            rf'([{options_concat}])\s?是正确的',
-            rf'([{options_concat}])\s?是正确答案',
-            rf'选项\s?([{options_concat}])\s?正确',
-            rf'所以答\s?([{options_concat}])',
-            rf'所以\s?([{options_concat}][.。$]?$)',
-            rf'所有\s?([{options_concat}][.。$]?$)',
-            rf'[\s，：:,]([{options_concat}])[。，,\.]?$',
-            rf'[\s，,：:][故即]([{options_concat}])[。\.]?$',
-            rf'[\s，,：:]因此([{options_concat}])[。\.]?$',
-            rf'[是为。]\s?([{options_concat}])[。\.]?$',
-            rf'因此\s?([{options_concat}])[。\.]?$',
-            rf'显然\s?([{options_concat}])[。\.]?$',
-            rf'答案是\s?(\S+)(?:。|$)',
-            rf'答案应该是\s?(\S+)(?:。|$)',
-            rf'答案为\s?(\S+)(?:。|$)',
-            rf'答案是(.*?)[{options_concat}]',
-            rf'答案为(.*?)[{options_concat}]',
-            rf'固选(.*?)[{options_concat}]',
-            rf'答案应该是(.*?)[{options_concat}]',
-            rf'[Tt]he answer is \(?[{options_concat}]\)?',
-            rf'[Tt]he correct answer is [{options_concat}]',
-            rf'[Tt]he correct answer is:\n[{options_concat}]',
-            rf'(\s|^)[{options_concat}][\s。，,\.$]',  # noqa
-            rf'^选项\s?([{options_concat}])',
-            rf'^([{options_concat}])\s?选?项',
-            rf'(\s|^)[{options_concat}][\s。，,：:\.$]',
-            rf'(\s|^)[{options_concat}](\s|$)',
-            rf'[{options_concat}]',
+            f'答案是?\s*([{options_concat}])',
+            f'答案是?\s*：\s*([{options_concat}])',
+            f'答案是?\s*:\s*([{options_concat}])',
+            f'答案选项应?该?是\s*([{options_concat}])',
+            f'答案选项应?该?为\s*([{options_concat}])',
+            f'答案应该?是\s*([{options_concat}])',
+            f'答案应该?选\s*([{options_concat}])',
+            f'答案选项为?\s*：\s*([{options_concat}])',
+            f'答案选项为?\s+\(?\*?\*?([{options_concat}])\*?\*?\)?',
+            f'答案选项是?\s*:\s*([{options_concat}])',
+            f'答案为\s*([{options_concat}])',
+            f'答案选\s*([{options_concat}])',
+            f'选择?\s*([{options_concat}])',
+            f'故选?\s*([{options_concat}])'
+            f'只有选?项?\s?([{options_concat}])\s?是?对',
+            f'只有选?项?\s?([{options_concat}])\s?是?错',
+            f'只有选?项?\s?([{options_concat}])\s?不?正确',
+            f'只有选?项?\s?([{options_concat}])\s?错误',
+            f'说法不?对选?项?的?是\s?([{options_concat}])',
+            f'说法不?正确选?项?的?是\s?([{options_concat}])',
+            f'说法错误选?项?的?是\s?([{options_concat}])',
+            f'([{options_concat}])\s?是正确的',
+            f'([{options_concat}])\s?是正确答案',
+            f'选项\s?([{options_concat}])\s?正确',
+            f'所以答\s?([{options_concat}])',
+            f'所以\s?([{options_concat}][.。$]?$)',
+            f'所有\s?([{options_concat}][.。$]?$)',
+            f'[\s，：:,]([{options_concat}])[。，,\.]?$',
+            f'[\s，,：:][故即]([{options_concat}])[。\.]?$',
+            f'[\s，,：:]因此([{options_concat}])[。\.]?$',
+            f'[是为。]\s?([{options_concat}])[。\.]?$',
+            f'因此\s?([{options_concat}])[。\.]?$',
+            f'显然\s?([{options_concat}])[。\.]?$',
+            f'答案是\s?(\S+)(?:。|$)',
+            f'答案应该是\s?(\S+)(?:。|$)',
+            f'答案为\s?(\S+)(?:。|$)',
+            f'(?i)ANSWER\s*:\s*([{options_concat}])',
+            f'[Tt]he answer is:?\s+\(?([{options_concat}])\)?',
+            f'[Tt]he answer is:?\s+\(?\*?\*?([{options_concat}])\*?\*?\)?',
+            f'[Tt]he answer is option:?\s+\(?([{options_concat}])\)?',
+            f'[Tt]he correct answer is:?\s+\(?([{options_concat}])\)?',
+            f'[Tt]he correct answer is option:?\s+\(?([{options_concat}])\)?',
+            f'[Tt]he correct answer is:?.*?boxed{{([{options_concat}])}}',
+            f'[Tt]he correct option is:?.*?boxed{{([{options_concat}])}}',
+            f'[Tt]he correct answer option is:?.*?boxed{{([{options_concat}])}}',
+            f'[Tt]he answer to the question is:?\s+\(?([{options_concat}])\)?',
+            f'^选项\s?([{options_concat}])',
+            f'^([{options_concat}])\s?选?项',
+            f'(\s|^)[{options_concat}][\s。，,：:\.$]',
+            f'1.\s?(.*?)$',
+            f'1.\s?([{options_concat}])[.。$]?$',
         ]
+        cushion_patterns = [
+            f'([{options_concat}]):',
+            f'([{options_concat}])',
+        ]
+        # flake8: noqa
+        # yapf: enable
 
-        regexes = [re.compile(pattern) for pattern in patterns]
-        for regex in regexes:
-            match = regex.search(text)
+        for pattern in patterns:
+            text = text.strip()
+            match = re.search(pattern, text, re.DOTALL)
             if match:
-                outputs = match.group(0)
-                for i in options:
+                if match.group(1) is not None and match.group(1) != '':
+                    outputs = match.group(1)
+                else:
+                    outputs = match.group(0)
+                for i in options_concat:
                     if i in outputs:
                         return i
-        # If no match found, try to find the last capital letter in the text
-        last_capital = ResponseParser.parse_last_capital(text, options)
-        if last_capital:
-            return last_capital
-        return 'No valid option found'
+        return ''
 
     @staticmethod
     def parse_first_option(text: str, options: list[str]) -> str:
@@ -169,29 +181,80 @@ class ResponseParser:
         Args:
             text: The text to parse.
         """
-        options_pattern = ResponseParser.process_options(options)
+        options_concat = ResponseParser.process_options(options)
 
         patterns = [
-            rf'[Aa]nswer:\s*({options_pattern})',
-            rf'ANSWER:\s*({options_pattern})',
-            rf'answer is \(?({options_pattern})\)?',
-            rf'[Tt]he correct answer is:\s*({options_pattern})',
-            rf'[Tt]he correct answer is:\n\s*({options_pattern})',
-            rf'[Tt]he correct answer is:\n\n-\s*({options_pattern})',
-            rf'[Tt]he answer might be:\n\n-\s*({options_pattern})',
-            rf'[Tt]he answer is \s*({options_pattern})',
+            f'答案是?\s*([{options_concat}])',
+            f'答案是?\s*：\s*([{options_concat}])',
+            f'答案是?\s*:\s*([{options_concat}])',
+            f'答案选项应?该?是\s*([{options_concat}])',
+            f'答案选项应?该?为\s*([{options_concat}])',
+            f'答案应该?是\s*([{options_concat}])',
+            f'答案应该?选\s*([{options_concat}])',
+            f'答案选项为?\s*：\s*([{options_concat}])',
+            f'答案选项为?\s+\(?\*?\*?([{options_concat}])\*?\*?\)?',
+            f'答案选项是?\s*:\s*([{options_concat}])',
+            f'答案为\s*([{options_concat}])',
+            f'答案选\s*([{options_concat}])',
+            f'选择?\s*([{options_concat}])',
+            f'故选?\s*([{options_concat}])'
+            f'只有选?项?\s?([{options_concat}])\s?是?对',
+            f'只有选?项?\s?([{options_concat}])\s?是?错',
+            f'只有选?项?\s?([{options_concat}])\s?不?正确',
+            f'只有选?项?\s?([{options_concat}])\s?错误',
+            f'说法不?对选?项?的?是\s?([{options_concat}])',
+            f'说法不?正确选?项?的?是\s?([{options_concat}])',
+            f'说法错误选?项?的?是\s?([{options_concat}])',
+            f'([{options_concat}])\s?是正确的',
+            f'([{options_concat}])\s?是正确答案',
+            f'选项\s?([{options_concat}])\s?正确',
+            f'所以答\s?([{options_concat}])',
+            f'所以\s?([{options_concat}][.。$]?$)',
+            f'所有\s?([{options_concat}][.。$]?$)',
+            f'[\s，：:,]([{options_concat}])[。，,\.]?$',
+            f'[\s，,：:][故即]([{options_concat}])[。\.]?$',
+            f'[\s，,：:]因此([{options_concat}])[。\.]?$',
+            f'[是为。]\s?([{options_concat}])[。\.]?$',
+            f'因此\s?([{options_concat}])[。\.]?$',
+            f'显然\s?([{options_concat}])[。\.]?$',
+            f'答案是\s?(\S+)(?:。|$)',
+            f'答案应该是\s?(\S+)(?:。|$)',
+            f'答案为\s?(\S+)(?:。|$)',
+            f'(?i)ANSWER\s*:\s*([{options_concat}])',
+            f'[Tt]he answer is:?\s+\(?([{options_concat}])\)?',
+            f'[Tt]he answer is:?\s+\(?\*?\*?([{options_concat}])\*?\*?\)?',
+            f'[Tt]he answer is option:?\s+\(?([{options_concat}])\)?',
+            f'[Tt]he correct answer is:?\s+\(?([{options_concat}])\)?',
+            f'[Tt]he correct answer is option:?\s+\(?([{options_concat}])\)?',
+            f'[Tt]he correct answer is:?.*?boxed{{([{options_concat}])}}',
+            f'[Tt]he correct option is:?.*?boxed{{([{options_concat}])}}',
+            f'[Tt]he correct answer option is:?.*?boxed{{([{options_concat}])}}',
+            f'[Tt]he answer to the question is:?\s+\(?([{options_concat}])\)?',
+            f'^选项\s?([{options_concat}])',
+            f'^([{options_concat}])\s?选?项',
+            f'(\s|^)[{options_concat}][\s。，,：:\.$]',
+            f'1.\s?(.*?)$',
+            f'1.\s?([{options_concat}])[.。$]?$',
         ]
+        cushion_patterns = [
+            f'([{options_concat}]):',
+            f'([{options_concat}])',
+        ]
+        # flake8: noqa
+        # yapf: enable
 
-        regexes = [re.compile(pattern) for pattern in patterns]
-        for regex in regexes:
-            matches = regex.search(text)
-            if matches:
-                return matches.group(1)
-        # If no match found, try to find the last capital letter in the text
-        last_capital = ResponseParser.parse_last_capital(text, options)
-        if last_capital:
-            return last_capital
-        return 'No valid option found'
+        for pattern in patterns:
+            text = text.strip()
+            match = re.search(pattern, text, re.DOTALL)
+            if match:
+                if match.group(1) is not None and match.group(1) != '':
+                    outputs = match.group(1)
+                else:
+                    outputs = match.group(0)
+                for i in options_concat:
+                    if i in outputs:
+                        return i
+        return ''
 
 
     @staticmethod
